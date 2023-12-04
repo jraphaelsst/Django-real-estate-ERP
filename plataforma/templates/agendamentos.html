@@ -1,0 +1,86 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+
+<link rel="stylesheet" href="{% static 'plataforma/css/home.css' %}">
+
+{% endblock  %}
+
+
+{% block 'body' %}
+
+    <div class="container">
+        
+        <br>
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">img</th>
+                <th scope="col">Endereco</th>
+                <th scope="col">Dia/Hora</th>
+                <th scope="col">Status</th>
+                <th scope="col">Finalizar</th>
+                <th scope="col">Cancelar</th>
+                <th scope="col">Apagar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for visita in visitas %}
+                <tr>
+                    <th><img width="80" src="{{visita.imovel.imagens.all.0}}"></th>
+                    <td>{{visita.imovel.rua}}, {{visita.imovel.cidade}}</td>
+                    <td>{{visita.dia}}/{{visita.horario}}</td>
+
+                    <td>
+                        {% if visita.status == "A" %}
+                            <span class="badge badge-info">Agendado</span>
+                        {% endif %}
+
+                        {% if visita.status == "F" %}
+                            <span class="badge badge-success">Finalizado</span>
+                        {% endif %}
+
+                        {% if visita.status == "C" %}
+                            <span class="badge badge-danger">Cancelado</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if visita.status == "A" %}
+                            <a href="{% url 'finalizar_agendamento' visita.id %}" class="btn btn-success">Finalizar</a>
+                        {% elif visita.status == 'C' %}
+                            <a href="" class="btn btn-danger disabled">Cancelado</a>
+                        {% else %}
+                            <a href='' class='btn btn-secondary disabled'>Finalizado</a>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if visita.status == "A" %}
+                            <a href="{% url 'cancelar_agendamento' visita.id %}" class="btn btn-danger">Cancelar</a>
+                        {% elif visita.status == 'C' %}
+                            <a href="" class="btn btn-danger disabled">Cancelado</a>
+                        {% else %}
+                            <a href="" class="btn btn-danger disabled">Cancelar</a>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if visita.status == "A" %}
+                            <a href="{% url 'apagar_agendamento' visita.id %}" class="btn btn-danger">Apagar</a>
+                        {% elif visita.status == 'C' %}
+                            <a href="{% url 'apagar_agendamento' visita.id %}" class="btn btn-danger">Apagar</a>
+                        {% else %}
+                            <a href="{% url 'apagar_agendamento' visita.id %}" class="btn btn-danger">Apagar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    
+
+
+{% endblock  %}
